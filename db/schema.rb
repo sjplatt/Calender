@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150905015215) do
+ActiveRecord::Schema.define(version: 20150905025929) do
 
   create_table "comments", force: :cascade do |t|
     t.text     "text",       limit: 65535
@@ -38,15 +38,26 @@ ActiveRecord::Schema.define(version: 20150905015215) do
   add_index "events", ["comments_id"], name: "index_events_on_comments_id", using: :btree
   add_index "events", ["users_id"], name: "index_events_on_users_id", using: :btree
 
-  create_table "users", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.text     "facebookid", limit: 65535
-    t.text     "categories", limit: 65535
+  create_table "relationships", force: :cascade do |t|
+    t.text     "type",       limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
-    t.integer  "events_id",  limit: 4
+    t.integer  "users_id",   limit: 4
+  end
+
+  add_index "relationships", ["users_id"], name: "index_relationships_on_users_id", using: :btree
+
+  create_table "users", force: :cascade do |t|
+    t.string   "name",            limit: 255
+    t.text     "facebookid",      limit: 65535
+    t.text     "categories",      limit: 65535
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "events_id",       limit: 4
+    t.integer  "relationship_id", limit: 4
   end
 
   add_index "users", ["events_id"], name: "index_users_on_events_id", using: :btree
+  add_index "users", ["relationship_id"], name: "index_users_on_relationship_id", using: :btree
 
 end
