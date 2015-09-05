@@ -30,10 +30,10 @@ class WelcomeController < ApplicationController
           puts key
           value.each do |val|
             puts "SUP@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-            user.relationships.create(type:val)
+            user.relationships.create(reltype:val)
             #HERE WE SEND A NOTIFICATION TO friend SO THAT HE WILL CLASSIFY
             #user
-            friend.relationships.create(type:val)
+            friend.relationships.create(reltype:val)
           end
         end
       end
