@@ -44,10 +44,7 @@ class WelcomeController < ApplicationController
     id = self_data["id"]
 
     if !User.find_by(facebookid:id)
-      #render :js => "window.location = '/process_user_info'"
-      respond_to do |format|
-        format.json {render :json =>  params[:friends]}
-      end
+      render :js => "window.location = '/process_user_info'"
       return
     end
 
