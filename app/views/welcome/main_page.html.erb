@@ -1,1 +1,54 @@
 <h1>Welcome#main_page</h1>
+
+<!--button id="create">CREATE EVENT</button-->
+<div id="event-creator">
+  Name: <input type="text" id="name"><br>
+  Start date/time e.g. 2015-09-05, or 2015-09-05T12:30:00 <input type="text" id="startdate"><br>
+  End date/time: <input type="text" id="enddate"><br>
+  Location: <input type="text" id="location"><br>
+  Website: <input type="text" id="website"><br>
+  Description: <input type="text" id="description"><br>
+  Category: <input type="text" id="category"><br>
+  <button id="invited">Invite others...</button><br>
+  <button id="event-done">DONE</button>
+</div>
+
+<div id="calendar"></div>
+
+<script>
+$(document).ready(function() {
+  var events = [{title:"E1",start:"2015-09-04",end:"2015-09-07"}];
+
+  $('#calendar').fullCalendar({
+  });
+
+  $("#calendar").fullCalendar("addEventSource",events);
+
+  $("#event-done").click(function() {
+    var eventObj = {
+      title: $("#name").val(),
+      start: $("#startdate").val(),
+      end: $("#enddate").val(),
+      url: $("#website").val()
+    };
+
+    events.push(eventObj);
+
+    console.log(events);
+    $("#calendar").fullCalendar("removeEvents");
+    $("#calendar").fullCalendar("addEventSource",events);
+    create_event(eventObj);
+  });
+
+  // POST /ajax/create_event
+  function create_event(eventObj) {
+    $.post("/ajax/create_event",
+      {eventObj: eventObj},
+      function(data) {
+        console.log(data);
+      });
+  }
+
+
+});
+</script>

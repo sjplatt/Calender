@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   root 'welcome#index'
   post '/ajax/get_preliminary_data' => 'welcome#first_page'
   post '/ajax/get_fb_data' => 'welcome#add_to_database'
+  post '/ajax/create_event' => 'welcome#create_event'
   get 'process_user_info' => 'welcome#process_user_info'
   get 'main_page' => 'welcome#main_page'
   

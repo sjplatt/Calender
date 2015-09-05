@@ -38,10 +38,10 @@
     $(".hover-popup").each(function(index,elem) {
       $(elem).children(".no-categories").remove();
 
-      var newcategoryHTML = '<div class="popup-category">' + category_name +
+      var newcategoryHTML = '<div class="popup-category"><label>' + category_name +
         '<input type="checkbox" data-category="' + 
         category_name.replace(/\W/g, "-") + '" data-id="' +
-        $(elem).parent().attr("data-id") + '"></div>';
+        $(elem).parent().attr("data-id") + '"></label></div>';
 
       $(elem).append(newcategoryHTML);
     });
@@ -230,31 +230,36 @@
         '<div class="friend-entry" data-id=' + friendObj.id + '>\
           <img src="' + friendObj.picture.data.url + '"/>'
           + friendObj.name + 
-          '<div class="hover-popup"><div class="no-categories">No categories yet</div></div></div>');
+          '<div class="hover-popup col-md-6"><div class="no-categories">No categories yet</div></div></div>');
       console.log(friends[key]);
 
       friends_ids.push(friendObj.id);
     }
 
-    // TODO add hoverboxes instead of logging
     $(".friend-entry").hover(
     function() {
       console.log("in");
+      $(this).children(".hover-popup").show(500);
     }, function() {
       console.log("out");
+      $(this).children(".hover-popup").hide(500);
     });
   }
 
 </script>
 
 <style>
-.friends-display {
-  width: 50%;
-}
-.categories-display {
-  width: 50%;
-}
 .friend-entry, .category {
   border: 1px solid black;
+}
+.friend-entry {
+  position: relative;
+}
+.hover-popup {
+  position: absolute;
+  left: 50%;
+  top: 25px;
+  display: none;
+  border: 1px solid red;
 }
 </style>

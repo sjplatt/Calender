@@ -44,7 +44,17 @@ class WelcomeController < ApplicationController
     
   end
 
-  # POST 'ajax/get_fb_data'
+  # POST /ajax/create_event
+  def create_event
+    event = params[:eventObj]
+    puts event
+    
+    respond_to do |format|
+      format.json {render :json => {:event => event}}
+    end
+  end
+
+  # POST 'ajax/get_preliminary_data'
   def first_page
     self_data = params[:self]
     id = self_data["id"]
