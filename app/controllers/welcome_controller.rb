@@ -27,11 +27,12 @@ class WelcomeController < ApplicationController
 
     relationship.each do |key,value|
       friend = User.find_by(facebookid:key)
-
-      user.relationships.create(type:value,users_id:friend.id)
-      #HERE WE SEND A NOTIFICATION TO friend SO THAT HE WILL CLASSIFY
-      #user
-      friend.relationships.create(type:value,users_id:user.id)
+      value.each do |val|
+        user.relationships.create(type:val,users_id:friend.id)
+        #HERE WE SEND A NOTIFICATION TO friend SO THAT HE WILL CLASSIFY
+        #user
+        friend.relationships.create(type:val,users_id:user.id)
+      end
     end
     redirect_to action: main_page, login_id:id, view_id:id
   end

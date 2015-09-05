@@ -1,4 +1,4 @@
 class Event < ActiveRecord::Base
   has_many :comments
-  has_one :user
+  has_many :users
 end

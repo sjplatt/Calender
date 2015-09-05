@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150905042511) do
+ActiveRecord::Schema.define(version: 20150905155522) do
 
   create_table "comments", force: :cascade do |t|
     t.text     "text",       limit: 65535
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 20150905042511) do
   end
 
   add_index "users", ["events_id"], name: "index_users_on_events_id", using: :btree
+  add_index "users", ["facebookid"], name: "index_users_on_facebookid", unique: true, length: {"facebookid"=>50}, using: :btree
   add_index "users", ["relationship_id"], name: "index_users_on_relationship_id", using: :btree
 
 end
