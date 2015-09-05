@@ -70,7 +70,7 @@
 
   window.fbAsyncInit = function() {
   FB.init({
-    appId      : '{your-app-id}',
+    appId      : '922632911135836',
     cookie     : true,  // enable cookies to allow the server to access 
                         // the session
     xfbml      : true,  // parse social plugins on this page
@@ -108,19 +108,31 @@
   // successful.  See statusChangeCallback() for when this call is made.
   function testAPI() {
     console.log('Welcome!  Fetching your information.... ');
+
+    var fields = "picture,id,name,first_name,last_name,age_range,link,gender,locale,timezone,updated_time,verified";
     
-    FB.api('/me', function(response) {
-      console.log('Successful login for: ' + response.name);
-      console.log(response);
+    FB.api('/me?fields=' + fields, function(self_response) {
+      console.log('Successful login for: ' + self_response.name);
       document.getElementById('status').innerHTML =
-        'Thanks for logging in, ' + response.name + '!';
+        'Thanks for logging in, ' + self_response.name + '!';
+
+      FB.api('/me/friends?fields=' + fields, function(friends_response) {
+        if (friends_response && !friends_response.error) {
+          document.getElementById("status").innerHTML += " " + friends_response;
+          send_data(self_response, friends_response.data);
+        }
+      });
     });
 
-    FB.api('/me/friends', function(response) {
-      if (response && !response.error) {
-        document.getElementById("status").innerHTML += " " + response;
-        console.log(response);
-      }
+    
+  }
+
+  function send_data(self, friends) {
+    $.post("/ajax/get_fb_data",
+    {self: self,
+      friends: friends},
+    function(data) {
+      console.log(data);
     });
   }
 
