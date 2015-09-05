@@ -102,7 +102,7 @@
   function testAPI() {
     console.log('Welcome!  Fetching your information.... ');
 
-    var fields = "picture,id,name,first_name,last_name,age_range,link,gender,locale,timezone,updated_time,verified";
+    var fields = "id";
     
     FB.api('/me?fields=' + fields, function(self_response) {
       console.log('Successful login for: ' + self_response.name);
@@ -112,7 +112,7 @@
       FB.api('/me/friends?fields=' + fields, function(friends_response) {
         if (friends_response && !friends_response.error) {
           document.getElementById("status").innerHTML += " " + friends_response;
-          send_data(self_response, friends_response.data);
+          send_preliminary_data(self_response, friends_response.data);
         }
       });
     });
@@ -120,8 +120,8 @@
     
   }
 
-  function send_data(self, friends) {
-    $.post("/ajax/get_fb_data",
+  function send_preliminary_data(self, friends) {
+    $.post("/ajax/get_preliminary_data",
     {self: self,
       friends: friends},
     function(data) {

@@ -1,6 +1,22 @@
 <h1>Welcome#process_user</h1>
 
+<input type="text" id="category_name">
+
+<button id="add_category">ADD CATEGORY</button>
+
+<button id="done">DONE</button>
+
+<button id="check_status">CHECK LOGIN STATUS</button>
+
 <script>
+  $("#add_category").click(function() {
+    $("body").append('<div>' + $("#category_name").val() + '</div>')
+  });
+
+  $("#check_status").click(function() {
+    checkLoginState();
+  });
+
   // This is called with the results from from FB.getLoginStatus().
   function statusChangeCallback(response) {
     console.log('statusChangeCallback');
