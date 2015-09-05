@@ -30,10 +30,10 @@ class WelcomeController < ApplicationController
           puts key
           value.each do |val|
             puts "SUP@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-            user.relationships.create(reltype:val)
+            user.relationships.create(reltype:val,user_id:friend.facebookid)
             #HERE WE SEND A NOTIFICATION TO friend SO THAT HE WILL CLASSIFY
             #user
-            friend.relationships.create(reltype:val)
+            friend.relationships.create(reltype:val,user_id:user.facebookid)
           end
         end
       end
@@ -50,11 +50,12 @@ class WelcomeController < ApplicationController
   # POST /ajax/create_event
   def create_event
     event = params[:eventObj]
+    id = params[:login_id]
+
     start = event[:start]
     endtime = event[:end]
     title = event[:title]
     url = event[:url]
-    id = params[:login_id]
     location = event[:location]
     description = event[:description]
     event_category = event[:category]
@@ -63,8 +64,8 @@ class WelcomeController < ApplicationController
     user = User.find_by(facebookid:id)
 
     event = user.events.create(name:title,
-      starttime:start,emdtime:endtime,location:location,website:url,
-      description:description,hostclass:category)
+      starttime:start,endtime:endtime,location:location,website:url,
+      description:description,hostclass:event_category)
 
     invited.each do |invite|
       invited_friend = User.find_by(facebookid:invite)
@@ -104,6 +105,8 @@ class WelcomeController < ApplicationController
       @events = @user.events
 
       @friends = []
+      puts @user.relationships
+
       @user.relationships.each do |relat|
         @friends<<User.find_by(id:relat.user_id)
       end
@@ -113,6 +116,7 @@ class WelcomeController < ApplicationController
 
       @categories = ["Everyone"]
       @friends = []
+      puts @user.relationships
 
       @user.relationships.each do |relat|
         @friends<<User.find_by(id:relat.user_id)
