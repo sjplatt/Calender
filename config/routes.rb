@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   post '/ajax/get_fb_data' => 'welcome#first_page'
   get 'process_user_info' => 'welcome#process_user_info'
   get 'main_page' => 'welcome#main_page'
+  
    #Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
