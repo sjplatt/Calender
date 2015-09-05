@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150905025929) do
+ActiveRecord::Schema.define(version: 20150905042511) do
 
   create_table "comments", force: :cascade do |t|
     t.text     "text",       limit: 65535
@@ -55,6 +55,9 @@ ActiveRecord::Schema.define(version: 20150905025929) do
     t.datetime "updated_at",                    null: false
     t.integer  "events_id",       limit: 4
     t.integer  "relationship_id", limit: 4
+    t.text     "gender",          limit: 65535
+    t.text     "picture",         limit: 65535
+    t.text     "fblink",          limit: 65535
   end
 
   add_index "users", ["events_id"], name: "index_users_on_events_id", using: :btree
