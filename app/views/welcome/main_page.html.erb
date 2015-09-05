@@ -112,12 +112,15 @@ $(document).ready(function() {
     js.src = "//connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
-
+  
   function testAPI() {
     console.log('Welcome!');
+
+    /*FB.api('/me?fields=id,name', function(self_response) {
+      console.log('Successful login for: ' + self_response.name);
+      login_id = self_response.id;
+    });*/
   }
-
-
 
 
 
@@ -164,13 +167,15 @@ $(document).ready(function() {
     console.log(eventObj);
     $("#calendar").fullCalendar("removeEvents");
     $("#calendar").fullCalendar("addEventSource",events);
-    create_event(eventObj);
+    
+    create_event(eventObj, "<%= @user.facebookid %>");
   });
 
   // POST /ajax/create_event
-  function create_event(eventObj) {
+  function create_event(eventObj, login_id) {
     $.post("/ajax/create_event",
-      {eventObj: eventObj},
+      {eventObj: eventObj,
+        login_id: login_id},
       function(data) {
         //console.log(data);
       });
