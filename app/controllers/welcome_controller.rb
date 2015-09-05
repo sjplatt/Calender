@@ -50,14 +50,28 @@ class WelcomeController < ApplicationController
   # POST /ajax/create_event
   def create_event
     event = params[:eventObj]
-    name = event[:name]
-    startend = event[:startend]
+    start = event[:start]
+    endtime = event[:end]
     title = event[:title]
     url = event[:url]
     id = params[:login_id]
-    
+    location = event[:location]
+    description = event[:description]
+    event_category = event[:category]
+    invited = event[:invited]
+
     user = User.find_by(facebookid:id)
 
+    event = user.events.create(name:title,
+      starttime:start,emdtime:endtime,location:location,website:url,
+      description:description,hostclass:category)
+
+    invited.each do |invite|
+      invited_friend = User.find_by(facebookid:invite)
+      if invited_friend
+        invited_friend.events << event
+      end
+    end
     #user.events.create(name:name,datetime:startend,website:url,)
     respond_to do |format|
       format.json {render :json => {:event => event}}
