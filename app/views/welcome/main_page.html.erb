@@ -10,16 +10,31 @@
   Location: <input type="text" id="location"><br>
   Website: <input type="text" id="website"><br>
   Description: <input type="text" id="description"><br>
+  
   <div id="category">Category:
+  <form id="category-form">
   <% @categories.each do |c| %>
-    <input type="radio" id=<%= c %>> <%= c %>
+    <label>
+    <input type="radio" name="category" data-category=<%= c %>> <%= c %>
+    </label>
   <% end %>
-  </div><br>
+  </form>
+  </div>
+
+  <br>
+  
   <div id="invited">Invite others:
+  <form id="invite-form">
   <% @friends.each do |f| %>
-    <input type="checkbox" id=<%= f.id %>> <%= f.name %>
+    <label>
+    <input type="checkbox" name="invited" data-id=<%= f.facebookid %>> <%= f.name %>
+    </label>
   <% end %>
-  </div><br>
+  </form>
+  </div>
+
+  <br>
+
   <button id="event-done">DONE</button>
 </div>
 
@@ -99,7 +114,7 @@ $(document).ready(function() {
   }(document, 'script', 'facebook-jssdk'));
 
   function testAPI() {
-    console.log('Welcome!  Fetching your information.... ');
+    console.log('Welcome!');
   }
 
 
@@ -123,6 +138,15 @@ $(document).ready(function() {
   $("#calendar").fullCalendar("addEventSource",events);
 
   $("#event-done").click(function() {
+    var chosen_category = $('input[name="category"]:checked').parent().text().trim();
+    //console.log(chosen_category);
+
+    var the_chosen_ones = [];
+    $('input[name="invited"]:checked').each(function(index,elem) {
+      the_chosen_ones.push($(elem).attr("data-id"));
+    });
+    //console.log(the_chosen_ones);
+
     var eventObj = {
       title: $("#name").val(),
       start: $("#startdate").val(),
@@ -130,13 +154,14 @@ $(document).ready(function() {
       location: $("#location").val(),
       url: $("#website").val(),
       description: $("#description").val(),
-      category: $("#category").val(),
-      invited: $("#invited").val()
+      category: chosen_category,
+      invited: the_chosen_ones
     };
 
     events.push(eventObj);
 
     console.log(events);
+    console.log(eventObj);
     $("#calendar").fullCalendar("removeEvents");
     $("#calendar").fullCalendar("addEventSource",events);
     create_event(eventObj);
@@ -147,7 +172,7 @@ $(document).ready(function() {
     $.post("/ajax/create_event",
       {eventObj: eventObj},
       function(data) {
-        console.log(data);
+        //console.log(data);
       });
   }
 
