@@ -6,6 +6,6 @@ class CreateRelationships < ActiveRecord::Migration
       t.timestamps null: false
     end
 
-    add_reference :relationships, :users, index: true 
+    add_reference :relationships, :user, index: true 
   end
 end

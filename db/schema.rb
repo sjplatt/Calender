@@ -32,20 +32,20 @@ ActiveRecord::Schema.define(version: 20150905155522) do
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
     t.integer  "comments_id", limit: 4
-    t.integer  "users_id",    limit: 4
+    t.integer  "user_id",     limit: 4
   end
 
   add_index "events", ["comments_id"], name: "index_events_on_comments_id", using: :btree
-  add_index "events", ["users_id"], name: "index_events_on_users_id", using: :btree
+  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
   create_table "relationships", force: :cascade do |t|
     t.text     "type",       limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
-    t.integer  "users_id",   limit: 4
+    t.integer  "user_id",    limit: 4
   end
 
-  add_index "relationships", ["users_id"], name: "index_relationships_on_users_id", using: :btree
+  add_index "relationships", ["user_id"], name: "index_relationships_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "name",            limit: 255

@@ -10,31 +10,33 @@ class WelcomeController < ApplicationController
     categories = params[:categories]
     relationship = params[:relationship]
     
-    # friends_ids = []
-    # friends_data.each do |key,friend|
-    #   friends_ids.push(friend["id"])
-    # end
     friends_ids = friends_data
-    
+      
     name = self_data["name"]
     gender = self_data["gender"]
     id = self_data["id"]
     picture = self_data["picture"]["data"]["url"]
     link = self_data["link"]
 
-    user = User.create(name:name, gender:gender, facebookid:id,fblink:link,
-      picture:picture,categories:categories.to_s)
+    if !User.find_by(facebookid:self_data["id"])
 
-    relationship.each do |key,value|
-      friend = User.find_by(facebookid:key)
-      value.each do |val|
-        user.relationships.create(type:val,users_id:friend.id)
-        #HERE WE SEND A NOTIFICATION TO friend SO THAT HE WILL CLASSIFY
-        #user
-        friend.relationships.create(type:val,users_id:user.id)
+      user = User.create(name:name, gender:gender, facebookid:id,fblink:link,
+        picture:picture,categories:categories.to_s)
+
+      if relationship
+        relationship.each do |key,value|
+          friend = User.find_by(facebookid:key)
+          value.each do |val|
+            user.relationships.create(type:val,users_id:friend.id)
+            #HERE WE SEND A NOTIFICATION TO friend SO THAT HE WILL CLASSIFY
+            #user
+            friend.relationships.create(type:val,users_id:user.id)
+          end
+        end
       end
     end
-    redirect_to action: main_page, login_id:id, view_id:id
+    redirect_to action: 'main_page', login_id:id, view_id:id
+    return 
   end
 
   def process_user_info()
@@ -57,18 +59,18 @@ class WelcomeController < ApplicationController
   end
 
   def main_page
-    login_id = params["login_id"]
-    view_id = params["view_id"]
+    login_id = params[:login_id]
+    view_id = params[:view_id]
+
     if login_id == view_id
       @user = User.find_by(facebookid:login_id)
+      @categories = YAML.load(@user.categories)
 
-      @categories = YAML.load(user.categories)
-
-      @events = User.events
+      @events = @user.events
 
       @friends = []
-      @user.relationship.each do |relat|
-        @friends<<User.find_by(id:relat.user_id)
+      @user.relationships.each do |relat|
+        @friends<<User.find_by(id:relat.users_id)
       end
     else
       @user = User.find_by(facebookid:view_id)
@@ -78,7 +80,7 @@ class WelcomeController < ApplicationController
       @friends = []
 
       @user.relationships.each do |relat|
-        @friends<<User.find_by(id:relat.user_id)
+        @friends<<User.find_by(id:relat.users_id)
         if relat.user_id == curuser.id
           @categories<<relat.type
         end
