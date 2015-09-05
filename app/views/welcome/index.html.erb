@@ -21,7 +21,19 @@
 <br>
 <br>
 
+<!--
+  Below we include the Login Button social plugin. This button uses
+  the JavaScript SDK to present a graphical Login button that triggers
+  the FB.login() function when clicked.
+-->
 
+<!--fb:login-button scope="public_profile,email,user_friends" onlogin="checkLoginState();">
+</fb:login-button-->
+
+<div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="true" data-scope="public_profile,email,user_friends" data-onlogin="checkLoginState();"></div>
+
+<div id="status">
+</div>
 
 <script>
   // This is called with the results from from FB.getLoginStatus().
@@ -99,27 +111,17 @@
     
     FB.api('/me', function(response) {
       console.log('Successful login for: ' + response.name);
+      console.log(response);
       document.getElementById('status').innerHTML =
         'Thanks for logging in, ' + response.name + '!';
     });
 
     FB.api('/me/friends', function(response) {
       if (response && !response.error) {
-        document.getElementById("status").innerHTML += response;
+        document.getElementById("status").innerHTML += " " + response;
         console.log(response);
       }
     });
   }
+
 </script>
-
-<!--
-  Below we include the Login Button social plugin. This button uses
-  the JavaScript SDK to present a graphical Login button that triggers
-  the FB.login() function when clicked.
--->
-
-<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-</fb:login-button>
-
-<div id="status">
-</div>
