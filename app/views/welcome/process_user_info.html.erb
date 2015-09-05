@@ -1,19 +1,124 @@
+
+<div class="col-md-12">
+
 <h1>Welcome#process_user</h1>
 
-<input type="text" id="category_name">
+<div id="status"></div>
 
-<button id="add_category">ADD CATEGORY</button>
+<input type="text" id="category-name">
+
+<button id="add-category">ADD CATEGORY</button>
 
 <button id="done">DONE</button>
 
-<button id="check_status">CHECK LOGIN STATUS</button>
+<button id="logout">logout</button>
+</div>
+
+<div class="friends-display col-md-6">
+</div>
+
+<div class="categories-display col-md-6">
+</div>
+
 
 <script>
-  $("#add_category").click(function() {
-    $("body").append('<div>' + $("#category_name").val() + '</div>')
+  function p(str) {console.log(str);}
+
+  $("#add-category").click(function() {
+    var category_name = $("#category-name").val();
+
+    // Add to cateogry display
+    $(".categories-display").append('<div class="category" data-category=' + category_name.replace(/\W/g,"-") + '><span class="name">' + category_name + '</span><span class="count">0</span></div>');
+
+    $("#category-name").val("");
+
+    // Characterize hover popup checkboxes for easy relationship builder
+    $(".hover-popup").each(function(index,elem) {
+      $(elem).children(".no-categories").remove();
+
+      var newcategoryHTML = '<div class="popup-category">' + category_name +
+        '<input type="checkbox" data-category="' + 
+        category_name.replace(/\W/g, "-") + '" data-id="' +
+        $(elem).parent().attr("data-id") + '"></div>';
+
+      $(elem).append(newcategoryHTML);
+    });
+
+    // Update category count
+    $(".popup-category input").change(function() {
+      var checked = $(this).prop("checked");
+      var category = $(this).attr("data-category");
+
+      var category_count = $('.categories-display div[data-category="' + category + '"] span.count');
+      
+      category_count.text($('input:checked[data-category="' + category + '"]').length);
+    });
+
   });
 
-  $("#check_status").click(function() {
+  var self_data = {}; // filled in fb call
+  var friends_ids = []; // filled in fb call
+  var categories = []; // filled on click
+  var relationships = {}; // filled on click
+
+  // Submit ajax through send_data
+  $("#done").click(function() {
+    categories = [];
+    relationships = {};
+
+    $(".category").each(function(index,elem) {
+      categories.push($(elem).children(".name").text());
+    });
+
+    // { {id: [cat1,cat2]}, {id: [cat1]}, ...}
+    $(".friend-entry").each(function(index,elem) {
+      var friend_id = $(this).attr("data-id");
+      var friend_categories_arr = [];
+      $(".friend-entry .popup-category").each(function(index,elem) {
+        if ($(elem).children("input").prop("checked")) {
+          friend_categories_arr.push($(elem).text());
+        }
+      });
+
+      relationships[friend_id] = friend_categories_arr;
+    });
+
+    /*p(self_data);
+    p(friends_ids);
+    p(categories);
+    p(relationships);*/
+
+    send_data(
+        self_data,
+        friends_ids,
+        categories,
+        relationships
+      );
+  });
+
+  function send_data(self, friends, categories, relationships) {
+    $.post("/ajax/get_fb_data",
+    {
+      self: self,
+      friends: friends,
+      categories: categories,
+      relationship: relationships
+    },
+    function(data) {
+      console.log(data);
+    });
+  }
+
+  $("#logout").click(function() {
+    FB.logout(function(response) {
+    });
+  });
+
+
+
+
+
+  $("#check-status").click(function() {
     checkLoginState();
   });
 
@@ -100,21 +205,48 @@
       FB.api('/me/friends?fields=' + fields, function(friends_response) {
         if (friends_response && !friends_response.error) {
           document.getElementById("status").innerHTML += " " + friends_response;
-          send_data(self_response, friends_response.data);
+          populate_friends_display(friends_response.data);
+          
+          console.log(self_response);
+          self_data = self_response;
         }
       });
     });
-
-    
   }
 
-  function send_data(self, friends) {
-    $.post("/ajax/get_fb_data",
-    {self: self,
-      friends: friends},
-    function(data) {
-      console.log(data);
+  function populate_friends_display(friends) {
+    for (var key in friends) {
+      var friendObj = friends[key];
+
+      $(".friends-display").append(
+        '<div class="friend-entry" data-id=' + friendObj.id + '>\
+          <img src="' + friendObj.picture.data.url + '"/>'
+          + friendObj.name + 
+          '<div class="hover-popup"><div class="no-categories">No categories yet</div></div></div>');
+      console.log(friends[key]);
+
+      friends_ids.push(friendObj.id);
+    }
+
+    // TODO add hoverboxes instead of logging
+    $(".friend-entry").hover(
+    function() {
+      console.log("in");
+    }, function() {
+      console.log("out");
     });
   }
 
 </script>
+
+<style>
+.friends-display {
+  width: 50%;
+}
+.categories-display {
+  width: 50%;
+}
+.friend-entry, .category {
+  border: 1px solid black;
+}
+</style>

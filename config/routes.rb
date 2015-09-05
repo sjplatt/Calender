@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'welcome#index'
   post '/ajax/get_preliminary_data' => 'welcome#first_page'
-  post '/ajax/get_fb_data' => 'welcome#process_user_info'
+  post '/ajax/get_fb_data' => 'welcome#add_to_database'
   get 'process_user_info' => 'welcome#process_user_info'
   get 'main_page' => 'welcome#main_page'
   

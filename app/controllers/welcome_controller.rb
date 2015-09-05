@@ -6,14 +6,15 @@ class WelcomeController < ApplicationController
   def add_to_database
     self_data = params[:self]
     friends_data = params[:friends]
-    
-    friends_ids = []
-    friends_data.each do |key,friend|
-      friends_ids.push(friend["id"])
-    end
     categories = params[:categories]
     relationship = params[:relationship]
-
+    
+    # friends_ids = []
+    # friends_data.each do |key,friend|
+    #   friends_ids.push(friend["id"])
+    # end
+    friends_ids = friends_data
+    
     name = self_data["name"]
     gender = self_data["gender"]
     id = self_data["id"]
@@ -45,8 +46,7 @@ class WelcomeController < ApplicationController
 
     if !User.find_by(facebookid:id)
       render :js => "window.location = '/process_user_info'"
-    else
-      main_page(self_data["id"],self_data["id"])
+      return
     end
 
     render :js => 
