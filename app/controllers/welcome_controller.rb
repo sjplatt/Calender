@@ -27,10 +27,10 @@ class WelcomeController < ApplicationController
         relationship.each do |key,value|
           friend = User.find_by(facebookid:key)
           value.each do |val|
-            user.relationships.create(type:val,users_id:friend.id)
+            user.relationships.create(type:val,user_id:friend.id)
             #HERE WE SEND A NOTIFICATION TO friend SO THAT HE WILL CLASSIFY
             #user
-            friend.relationships.create(type:val,users_id:user.id)
+            friend.relationships.create(type:val,user_id:user.id)
           end
         end
       end
@@ -47,8 +47,15 @@ class WelcomeController < ApplicationController
   # POST /ajax/create_event
   def create_event
     event = params[:eventObj]
-    puts event
+    name = event[:name]
+    startend = event[:startend]
+    title = event[:title]
+    url = event[:url]
+    id = params[:login_id]
     
+    user = User.find_by(facebookid:id)
+
+    #user.events.create(name:name,datetime:startend,website:url,)
     respond_to do |format|
       format.json {render :json => {:event => event}}
     end
