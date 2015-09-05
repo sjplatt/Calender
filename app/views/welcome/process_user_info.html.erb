@@ -12,12 +12,14 @@
 <button id="done">DONE</button>
 
 <button id="logout">logout</button>
+
+<button id="revoke">revoke permissions</button>
 </div>
 
-<div class="friends-display col-md-6">
+<div class="friends-display col-md-8">
 </div>
 
-<div class="categories-display col-md-6">
+<div class="categories-display col-md-4">
 </div>
 
 
@@ -89,11 +91,11 @@
     p(relationships);*/
 
     send_data(
-        self_data,
-        friends_ids,
-        categories,
-        relationships
-      );
+      self_data,
+      friends_ids,
+      categories,
+      relationships
+    );
   });
 
   function send_data(self, friends, categories, relationships) {
@@ -111,6 +113,12 @@
 
   $("#logout").click(function() {
     FB.logout(function(response) {
+    });
+  });
+
+  $("#revoke").click(function() {
+    FB.api("/me/permissions","DELETE",function(response){
+      console.log(response); //gives true on app delete success 
     });
   });
 
