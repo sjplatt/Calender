@@ -9,7 +9,8 @@ class WelcomeController < ApplicationController
     friends_data = params[:friends]
     categories = params[:categories]
     relationship = params[:relationship]
-    
+    puts relationship.to_s
+    puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     friends_ids = friends_data
       
     name = self_data["name"]
@@ -26,11 +27,13 @@ class WelcomeController < ApplicationController
       if relationship
         relationship.each do |key,value|
           friend = User.find_by(facebookid:key)
+          puts key
           value.each do |val|
-            user.relationships.create(type:val,user_id:friend.id)
+            puts "SUP@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+            user.relationships.create(type:val)
             #HERE WE SEND A NOTIFICATION TO friend SO THAT HE WILL CLASSIFY
             #user
-            friend.relationships.create(type:val,user_id:user.id)
+            friend.relationships.create(type:val)
           end
         end
       end

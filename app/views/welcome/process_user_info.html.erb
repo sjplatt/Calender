@@ -76,8 +76,8 @@
     $(".friend-entry").each(function(index,elem) {
       var friend_id = $(this).attr("data-id");
       var friend_categories_arr = [];
-      $(".friend-entry .popup-category").each(function(index,elem) {
-        if ($(elem).children("input").prop("checked")) {
+      $(this).find(".popup-category").each(function(index,elem) {
+        if ($(this).find("input").prop("checked")) {
           friend_categories_arr.push($(elem).text());
         }
       });
@@ -85,10 +85,10 @@
       relationships[friend_id] = friend_categories_arr;
     });
 
-    /*p(self_data);
+    p(self_data);
     p(friends_ids);
     p(categories);
-    p(relationships);*/
+    p(relationships);
 
     send_data(
       self_data,
