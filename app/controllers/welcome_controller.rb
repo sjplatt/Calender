@@ -86,12 +86,19 @@ class WelcomeController < ApplicationController
           @categories<<relat.type
         end
       end
-      events = User.events
+      events = @user.events
       @events = []
       if events
         events.each do |even|
           if @categories.include?(even.hostclass)
             @events<<even
+          end
+          if even
+            even.users.each do |user_of_event|
+              if user_of_event.facebookid == login_id && !@events.contains?(even)
+                @events<<even
+              end
+            end
           end
         end
       end
