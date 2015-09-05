@@ -1,5 +1,7 @@
 <h1>Welcome#main_page</h1>
 
+<button id="logout">logout</button>
+
 <!--button id="create">CREATE EVENT</button-->
 <div id="event-creator">
   Name: <input type="text" id="name"><br>
@@ -8,8 +10,16 @@
   Location: <input type="text" id="location"><br>
   Website: <input type="text" id="website"><br>
   Description: <input type="text" id="description"><br>
-  Category: <input type="text" id="category"><br>
-  <button id="invited">Invite others...</button><br>
+  <div id="category">Category:
+  <% @categories.each do |c| %>
+    <input type="radio" id=<%= c %>> <%= c %>
+  <% end %>
+  </div><br>
+  <div id="invited">Invite others:
+  <% @friends.each do |f| %>
+    <input type="checkbox" id=<%= f.id %>> <%= f.name %>
+  <% end %>
+  </div><br>
   <button id="event-done">DONE</button>
 </div>
 
@@ -17,6 +27,12 @@
 
 <script>
 $(document).ready(function() {
+
+  $("#logout").click(function() {
+    FB.logout(function(response) {
+    });
+  });
+
   var events = [{title:"E1",start:"2015-09-04",end:"2015-09-07"}];
 
   $('#calendar').fullCalendar({
@@ -29,7 +45,11 @@ $(document).ready(function() {
       title: $("#name").val(),
       start: $("#startdate").val(),
       end: $("#enddate").val(),
-      url: $("#website").val()
+      location: $("#location").val(),
+      url: $("#website").val(),
+      description: $("#description").val(),
+      category: $("#category").val(),
+      invited: $("#invited").val()
     };
 
     events.push(eventObj);
