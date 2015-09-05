@@ -30,10 +30,15 @@ class WelcomeController < ApplicationController
           puts key
           value.each do |val|
             puts "SUP@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-            user.relationships.create(reltype:val,user_id:friend.facebookid)
+            user.relationships.create(reltype:val,otherid:friend.facebookid)
             #HERE WE SEND A NOTIFICATION TO friend SO THAT HE WILL CLASSIFY
             #user
-            friend.relationships.create(reltype:val,user_id:user.facebookid)
+            friend.relationships.create(reltype:val,otherid:user.facebookid)
+            friend_cat = YAML.load(friend.categories)
+            if !friend_cat.contains?(val)
+              friend_cat << val
+            end
+            User.update(friend.id,categories:friend_cat)
           end
         end
       end
