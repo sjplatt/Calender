@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  datetime: 2015-09-04 20:48:56
+  website: MyText
+  description: MyText
+  hostclass: MyText
+  location: MyText
+
+two:
+  name: MyString
+  datetime: 2015-09-04 20:48:56
+  website: MyText
+  description: MyText
+  hostclass: MyText
+  location: MyText
