@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150905155522) do
+ActiveRecord::Schema.define(version: 20150905211323) do
 
   create_table "comments", force: :cascade do |t|
     t.text     "text",       limit: 65535
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 20150905155522) do
   add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
   create_table "relationships", force: :cascade do |t|
-    t.text     "type",       limit: 65535
+    t.text     "reltype",    limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.integer  "user_id",    limit: 4
