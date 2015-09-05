@@ -1,3 +1,4 @@
+require 'yaml'
 class WelcomeController < ApplicationController
   def index
   end
@@ -57,6 +58,32 @@ class WelcomeController < ApplicationController
   def main_page
     login_id = params["login_id"]
     view_id = params["view_id"]
+    if login_id == view_id
+      @user = User.find_by(facebookid:login_id)
+
+      @categories = YAML.load(user.categories)
+
+      @events = User.events
+    else
+      @user = User.find_by(facebookid:view_id)
+      curuser = User.find_by(facebookid:login_id)
+
+      @categories = ["Everyone"]
+      User.relationships.each do |relat|
+        if relat.user_id == curuser.id
+          @categories<<relat.type
+        end
+      end
+      events = User.events
+      @events = []
+      if events
+        events.each do |even|
+          if @categories.include?(even.hostclass)
+            @events<<even
+          end
+        end
+      end
+    end
   end
 
 end
