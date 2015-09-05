@@ -91,7 +91,7 @@ class WelcomeController < ApplicationController
 
       @friends = []
       @user.relationships.each do |relat|
-        @friends<<User.find_by(id:relat.users_id)
+        @friends<<User.find_by(id:relat.user_id)
       end
     else
       @user = User.find_by(facebookid:view_id)
@@ -101,7 +101,7 @@ class WelcomeController < ApplicationController
       @friends = []
 
       @user.relationships.each do |relat|
-        @friends<<User.find_by(id:relat.users_id)
+        @friends<<User.find_by(id:relat.user_id)
         if relat.user_id == curuser.id
           @categories<<relat.type
         end

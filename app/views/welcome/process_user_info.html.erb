@@ -19,25 +19,27 @@
 <div class="friends-display col-md-8">
 </div>
 
-<div class="categories-display col-md-4">
+<div class="categories-display col-md-4"></div>
 </div>
 
 
 <script>
   function p(str) {console.log(str);}
 
-  $("#add-category").click(function() {
-    var category_name = $("#category-name").val();
+  function update_category_count(cat) {
+    var category_count = $('.categories-display div[data-category="' + cat + '"] span.count');
+      
+    category_count.text($('input:checked[data-category="' + cat + '"]').length);
+  }
 
+  function add_category(category_name) {
     // Add to cateogry display
     $(".categories-display").append('<div class="category" data-category=' + category_name.replace(/\W/g,"-") + '><span class="name">' + category_name + '</span><span class="count">0</span></div>');
 
     $("#category-name").val("");
 
-    // Characterize hover popup checkboxes for easy relationship builder
+    // Add to hover popups
     $(".hover-popup").each(function(index,elem) {
-      $(elem).children(".no-categories").remove();
-
       var newcategoryHTML = '<div class="popup-category"><label>' + category_name +
         '<input type="checkbox" data-category="' + 
         category_name.replace(/\W/g, "-") + '" data-id="' +
@@ -45,18 +47,24 @@
 
       $(elem).append(newcategoryHTML);
     });
+  }
 
-    // Update category count
+  $("#add-category").click(function() {
+    var category_name = $("#category-name").val();
+
+    add_category(category_name);
+
+    // Add checkbox update category count listener
     $(".popup-category input").change(function() {
       var checked = $(this).prop("checked");
       var category = $(this).attr("data-category");
 
-      var category_count = $('.categories-display div[data-category="' + category + '"] span.count');
-      
-      category_count.text($('input:checked[data-category="' + category + '"]').length);
+      update_category_count(category);
     });
 
   });
+
+  //<input type="checkbox" data-category="Everyone" checked="checked" disabled="disabled">
 
   var self_data = {}; // filled in fb call
   var friends_ids = []; // filled in fb call
@@ -230,7 +238,7 @@
         '<div class="friend-entry" data-id=' + friendObj.id + '>\
           <img src="' + friendObj.picture.data.url + '"/>'
           + friendObj.name + 
-          '<div class="hover-popup col-md-6"><div class="no-categories">No categories yet</div></div></div>');
+          '<div class="hover-popup col-md-6"></div></div>');
       console.log(friends[key]);
 
       friends_ids.push(friendObj.id);
@@ -244,6 +252,12 @@
       console.log("out");
       $(this).children(".hover-popup").hide(500);
     });
+
+    // Add Everyone category
+    add_category("Everyone");
+    update_category_count("Everyone");
+    $('input[data-category="Everyone"]').attr("checked","checked").attr("disabled","disabled");
+      update_category_count("Everyone");
   }
 
 </script>
