@@ -3,17 +3,19 @@ class WelcomeController < ApplicationController
   def index
   end
 
+  # TODO add route
   def add_to_database
     self_data = params[:self]
     friends_data = params[:friends]
-    
-    friends_ids = []
-    friends_data.each do |key,friend|
-      friends_ids.push(friend["id"])
-    end
     categories = params[:categories]
     relationship = params[:relationship]
-
+    
+    # friends_ids = []
+    # friends_data.each do |key,friend|
+    #   friends_ids.push(friend["id"])
+    # end
+    friends_ids = friends_data
+    
     name = self_data["name"]
     gender = self_data["gender"]
     id = self_data["id"]
