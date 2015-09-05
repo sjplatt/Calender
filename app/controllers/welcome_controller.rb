@@ -35,7 +35,8 @@ class WelcomeController < ApplicationController
         end
       end
     end
-    redirect_to action: 'main_page', login_id:id, view_id:id
+    render :js => 
+      "window.location = '/main_page/?login_id=#{id}&view_id=#{id}'"
     return 
   end
 
