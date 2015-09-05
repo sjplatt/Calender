@@ -62,12 +62,20 @@ class WelcomeController < ApplicationController
       @categories = YAML.load(user.categories)
 
       @events = User.events
+
+      @friends = []
+      @user.relationship.each do |relat|
+        @friends<<User.find_by(id:relat.user_id)
+      end
     else
       @user = User.find_by(facebookid:view_id)
       curuser = User.find_by(facebookid:login_id)
 
       @categories = ["Everyone"]
-      User.relationships.each do |relat|
+      @friends = []
+
+      @user.relationships.each do |relat|
+        @friends<<User.find_by(id:relat.user_id)
         if relat.user_id == curuser.id
           @categories<<relat.type
         end
