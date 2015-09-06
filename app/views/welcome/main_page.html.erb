@@ -182,8 +182,12 @@ $(document).ready(function() {
     //addExtraAttrsTo(title);
 
     // Readd everything in events to calendar
-    // Once everything is added using fullCal, readd custom attributes
-    
+    readdEvents(events);
+    // Once everything is added using fullCal, custom attrs are lost; readd custom attributes to EVERYTHING
+    for (var i = 0; i < events.length; i++) {
+      readdExtraAttrsTo(events[i]);
+    }
+
     // ADD TO DB
     create_event(eventObj, "<%= @user.facebookid %>");
   });
