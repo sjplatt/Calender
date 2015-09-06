@@ -390,7 +390,7 @@ $(document).ready(function() {
     url: "<%=e.website%>",
     description: "<%=e.description%>",
     category: "<%=e.hostclass%>",
-    invited: <%=e.attending.html_safe%>});
+    invited: <%=[]||e.attending.html_safe%>});
   <% end %>
 
   // Initial adding into calendar using fullCal
@@ -405,7 +405,7 @@ $(document).ready(function() {
     url: "<%=e.website%>",
     description: "<%=e.description%>",
     category: "<%=e.hostclass%>",
-    invited: <%=e.attending.html_safe%>});
+    invited: <%=[]||e.attending.html_safe%>});
   <% end %>
 
   // Control tab displays
