@@ -1,25 +1,58 @@
+<%= render "header" %>
 
-<div class="col-md-12">
+<button style="display:none" id="revoke">revoke permissions</button>
 
-<h1>Welcome#process_user</h1>
+<div style="display:none" id="status"></div>
 
-<div id="status"></div>
+<div class="container">
+  <div class="row">
 
-<input type="text" id="category-name">
+    <div style="margin-top: 20px" class="instructions">Before getting started, categorize some of your friends. This helps you organize your relationships and events.</div>
 
-<a class="waves-effect waves-light btn" id="add-category">Add category</a>
+    <a style="float:right" class="waves-effect waves-light btn" id="done">Done</a>
+  </div>
 
-<a class="waves-effect waves-light btn" id="done">Done</a>
+  <div class="row">
 
+    <div class="col s6">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title grey-text">Friends using SoCal</span>
+        <div class="friends-display">
+          <ul class="collection">
+          </ul>
+        </div>
+      </div>
+    </div>
+    </div>
 
-<button id="revoke">revoke permissions</button>
+    <div class="col s6">
+    <div class="card">
+      <div class="card-content">
+        <div class="categories-display">
+          <form class="col s12">
+            <div class="row">
+              <div class="input-field col s6">
+                <input type="text" id="category-name">
+                <label for="category-name">Category name</label>
+              </div>
+              <div class="col s6" style="padding-top:20px">
+                <a class="waves-effect waves-light btn" id="add-category">Add category</a>
+              </div>
+            </div>
+
+            <ul class="collection">
+            </ul>
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>
+
+  </div>
 </div>
 
-<div class="friends-display col-md-8">
-</div>
 
-<div class="categories-display col-md-4"></div>
-</div>
 
 
 <script>
@@ -33,7 +66,7 @@
 
   function add_category(category_name) {
     // Add to cateogry display
-    $(".categories-display").append('<div class="category" data-category=' + category_name.replace(/\W/g,"-") + '><span class="name">' + category_name + '</span><span class="count">0</span></div>');
+    $(".categories-display .collection").append('<li class="collection-item" data-category=' + category_name.replace(/\W/g,"-") + '><span class="name">' + category_name + '</span>: <span class="count">0</span> members</div>');
 
     $("#category-name").val("");
 
@@ -233,11 +266,16 @@
     for (var key in friends) {
       var friendObj = friends[key];
 
-      $(".friends-display").append(
-        '<div class="friend-entry" data-id=' + friendObj.id + '>\
+      $(".friends-display .collection").append(
+          '<li class="collection-item avatar">\
+          <img src="' + friends[key].picture.data.url + '" class="circle"/>' + friends[key].name + '</a>\
+          </li>');
+
+
+        /*'<div class="friend-entry" data-id=' + friendObj.id + '>\
           <img src="' + friendObj.picture.data.url + '"/>'
           + friendObj.name + 
-          '<div class="hover-popup col-md-6"></div></div>');
+          '<div class="hover-popup col-md-6"></div></div>');*/
       console.log(friends[key]);
 
       friends_ids.push(friendObj.id);
@@ -262,7 +300,7 @@
 </script>
 
 <style>
-.friend-entry, .category {
+/*.friend-entry, .category {
   border: 1px solid black;
 }
 .friend-entry {
@@ -274,5 +312,5 @@
   top: 25px;
   display: none;
   border: 1px solid red;
-}
+}*/
 </style>
