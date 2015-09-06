@@ -64,7 +64,7 @@
   function p(str) {console.log(str);}
 
   function update_category_count(cat) {
-    var category_count = $('.categories-display div[data-category="' + cat + '"] span.count');
+    var category_count = $('.categories-display li[data-category="' + cat + '"] span.count');
       
     category_count.text($('input:checked[data-category="' + cat + '"]').length);
   }
@@ -78,11 +78,11 @@
     // Add to hover popups
     $(".hover-popup").each(function(index,elem) {
       var newcategoryHTML =
-      '<div class="popup-category"><p>\
-        <input type="checkbox" data-category="' + 
-        category_name.replace(/\W/g, "-") + '" id="cb-' +
-        $(elem).parent().attr("data-id") + '">\
-        <label for="cb-' + $(elem).parent().attr("data-id") + '">' + category_name + '</label></p></div>';
+      '<div class="popup-category">\
+        <form><input type="checkbox" data-category="' + 
+        category_name.replace(/\W/g, "-") + '" data-id="' +
+        $(elem).parent().attr("data-id") + '" id="cb-'+category_name.replace(/\W/g, "-")+$(elem).parent().attr("data-id")+'">\
+        <label for="cb-'+category_name.replace(/\W/g, "-")+$(elem).parent().attr("data-id")+'">' + category_name + '</label></form></div>';
 
       $(elem).append(newcategoryHTML);
     });
@@ -274,7 +274,7 @@
       var friendObj = friends[key];
 
       $(".friends-display .collection").append(
-          '<li class="collection-item avatar">\
+          '<li class="collection-item avatar friend-entry" data-id=' + friendObj.id + '>\
           <img src="' + friends[key].picture.data.url + '" class="circle"/>' + friends[key].name + '</a>\
           <div class="hover-popup"></div>\
           </li>');
