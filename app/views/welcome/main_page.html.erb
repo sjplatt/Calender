@@ -13,6 +13,9 @@
 .button-container {
   text-align: center;
 }
+.tooltip-title {
+  font-size: 30px;
+}
 
 </style>
 
@@ -66,19 +69,51 @@
 
 <div id="event-creator" class="modal modal-fixed-footer">
   <div class="modal-content">
-    Name: <input type="text" id="name"><br>
-    Start date/time e.g. 2015-09-05, or 2015-09-05T12:30:00 <input type="text" id="startdate"><br>
-    End date/time: <input type="text" id="enddate"><br>
-    Location: <input type="text" id="location"><br>
-    Website: <input type="text" id="website"><br>
-    Description: <input type="text" id="description"><br>
+    <form class="col s12">
+
+      <div class="row">
+        <div class="input-field col s12">
+          <input type="text" id="name">
+          <label for="name">Event name</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s6">
+          <input placeholder="2015-09-04T20:00:00" type="text" id="startdate">
+          <label for="startdate">Start date</label>
+        </div>
+        <div class="input-field col s6">
+          <input placeholder="2015-09-06T09:00:00" type="text" id="enddate">
+          <label for="enddate">End date</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s6">
+          <input type="text" id="location">
+          <label for="location">Location</label>
+        </div>
+        <div class="input-field col s6">
+          <input type="text" id="website">
+          <label for="website">Website</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s12">
+          <textarea id="description" class="materialize-textarea"></textarea>
+          <label for="description">Description</label>
+        </div>
+      </div>
     
     <div id="category">Category:
     <form id="category-form">
     <% @categories.each do |c| %>
-      <label>
-      <input type="radio" name="category" data-category=<%= c %>> <%= c %>
-      </label>
+      <p>
+      <input type="radio" <%= if c.eql?("Everyone") then 'checked="checked"' end %> name="category" id="category-<%=c.gsub(/\W/,'-')%>" data-category="<%= c %>">
+      <label for="category-<%=c.gsub(/\W/,'-')%>"><%= c %></label>
+      </p>
     <% end %>
     </form>
     </div>
@@ -88,9 +123,10 @@
     <div id="invited">Invite others:
     <form id="invite-form">
     <% @friends.each do |f| %>
-      <label>
-      <input type="checkbox" name="invited" data-id=<%= f.facebookid %>> <%= f.name %>
-      </label>
+      <p>
+      <input type="checkbox" name="invited" id="invited-<%=f.facebookid%>" data-id=<%=f.facebookid%>>
+      <label for="invited-<%=f.facebookid%>"><%= f.name %></label>
+      </p>
     <% end %>
     </form>
     </div>
@@ -267,7 +303,6 @@ $(document).ready(function() {
     $.ajax("/ajax/get_names",
       {ids:ids_arr},
       function(response) {
-
       });
   }
 
@@ -298,20 +333,31 @@ $(document).ready(function() {
         var eventPopupHTML =
           '<div id="event-' + infoObj.title.replace(/\W/,"-") + '" class="modal modal-fixed-footer">\
           <div class="modal-content">\
-          <span class="tooltip-heading">' + infoObj.title + '</span>\
+          <span class="tooltip-title">' + infoObj.title + '</span><br>\
           <span class="tooltip-text">' + infoObj.start + ' to ' + infoObj.end + '</span><br>\
           <span class="tooltip-heading">Location:</span>\
           <span class="tooltip-text">' + infoObj.location + '</span><br>\
           <span class="tooltip-text"><a href="' + infoObj.url + '">Website</a></span><br>\
           <span class="tooltip-heading">Description:</span>\
-          <span class="tooltip-text">' + infoObj.description.substring(0,50) + "..." + '</span>\
-          <span class="tooltip-heading">Category:</span>\
-          <span class="tooltip-text">' + infoObj.category + '<span>\
+          <span class="tooltip-text">' + infoObj.description + '</span><br>\
+          <span class="tooltip-heading">Visible to friends in category:</span>\
+          <span class="tooltip-text">' + infoObj.category + '<span><br>\
           <span class="tooltip-heading">Invited:</span>\
           <span class="tooltip-text invited-names"></span>\
+          <div class="row" style="margin-bottom:10px">\
+            <div class="input-field col s6 offset-s6">\
+              <textarea id="comment" class="materialize-textarea"></textarea>\
+              <label for="comment">Leave a comment...</label>\
+            </div>\
+          </div>\
+          <div style="text-align:right">\
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Submit</a>\
+          </div>\
           </div>\
           <div class="modal-footer">\
           <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Done</a>\
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Delete</a>\
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Edit</a>\
           </div>\
           </div>';
 
@@ -368,11 +414,17 @@ $(document).ready(function() {
     console.log(category);
 
     if (category == "all") {
-      $('.fc-event-container').css("opacity","1");
+      $('.fc-event-container').animate({
+        opacity: 1
+      }, 500);
     }
     else {
-      $('.fc-event-container').css("opacity","0.5");
-      $('.fc-content[data-category="' + category + '"]').parent().parent().css("opacity","1");
+      $('.fc-event-container').animate({
+        opacity: 0.5
+      }, 200);
+      $('.fc-content[data-category="' + category + '"]').parent().parent().animate({
+        opacity: 1
+      }, 500);
     }
   });
 

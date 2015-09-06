@@ -1,3 +1,5 @@
+
+
 <!-- facebook API -->
 
 <div id="fb-root"></div>
@@ -10,9 +12,7 @@
 }(document, 'script', 'facebook-jssdk'));</script>
 
 
-<div class="calendar">
 
-</div>
 
 <!--
   Below we include the Login Button social plugin. This button uses
@@ -23,9 +23,9 @@
 <!--fb:login-button scope="public_profile,email,user_friends" onlogin="checkLoginState();">
 </fb:login-button-->
 
-<div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="true" data-scope="public_profile,email,user_friends" data-onlogin="checkLoginState();"></div>
+<div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true" data-scope="public_profile,email,user_friends" data-onlogin="checkLoginState();"></div>
 
-<div id="status">
+<div id="status" style="display:none">
 </div>
 
 <script>
