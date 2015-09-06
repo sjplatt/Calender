@@ -198,7 +198,6 @@ $(document).ready(function() {
     console.log(events);
     $("#calendar").fullCalendar("removeEvents");
     $("#calendar").fullCalendar("addEventSource",events);
-    console.log("RESETTING");
   }
 
   function readdExtraAttrsTo(infoObj) {
@@ -209,14 +208,28 @@ $(document).ready(function() {
       if ($(elem).text() == infoObj.title) {
         console.log($(elem).parent());
         $(elem).parent()
-        //.css("font-size","30px")
         .attr("data-location", infoObj.location)
         .attr("data-url", infoObj.url)
         .attr("data-description", infoObj.description)
         .attr("data-category", infoObj.category)
         .attr("data-invited", infoObj.invited.toString());
+        $(elem).css("position","relative");
+        $(elem).parent().tooltipster({
+          content: $(
+          '<span class="tooltip-heading">' + infoObj.title + '</span>\
+          <span class="tooltip-text">' + infoObj.start + ' to ' + infoObj.end + '</span><br>\
+          <span class="tooltip-heading">Location:</span>\
+          <span class="tooltip-text">' + infoObj.location + '</span><br>\
+          <span class="tooltip-text"><a href="' + infoObj.url + '">Website</a></span><br>\
+          <span class="tooltip-heading">Description:</span>\
+          <span class="tooltip-text">' + infoObj.description.substring(0,50) + "..." + '</span>\
+          <span class="tooltip-heading">Category:</span>\
+          <span class="tooltip-text">' + infoObj.hostclass + '<span>\
+          <span class="tooltip-heading">Invited:</span>\
+          <span class="tooltip-text">???</span>')
+        })
       }
-    });
+    })
   }
   
 
@@ -278,5 +291,8 @@ $(document).ready(function() {
 <style>
 .tab {
   border: 1px solid red;
+}
+.tooltipster-base {
+  z-index: 1009380;
 }
 </style>
