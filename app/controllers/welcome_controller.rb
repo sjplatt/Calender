@@ -35,7 +35,7 @@ class WelcomeController < ApplicationController
             #user
             friend.relationships.create(reltype:val,otherid:user.facebookid)
             friend_cat = YAML.load(friend.categories)
-            if !friend_cat.contains?(val)
+            if !friend_cat.include?(val)
               friend_cat << val
             end
             User.update(friend.id,categories:friend_cat)
@@ -110,10 +110,11 @@ class WelcomeController < ApplicationController
       @events = @user.events
 
       @friends = []
-      puts @user.relationships
 
       @user.relationships.each do |relat|
-        @friends<<User.find_by(id:relat.user_id)
+        if relat.otherid != @user.id && !@friends.include?(User.find_by(facebookid:relat.otherid))
+          @friends<<User.find_by(facebookid:relat.otherid)
+        end
       end
     else
       @user = User.find_by(facebookid:view_id)
@@ -121,7 +122,6 @@ class WelcomeController < ApplicationController
 
       @categories = ["Everyone"]
       @friends = []
-      puts @user.relationships
 
       @user.relationships.each do |relat|
         @friends<<User.find_by(id:relat.user_id)
@@ -138,7 +138,7 @@ class WelcomeController < ApplicationController
           end
           if even
             even.users.each do |user_of_event|
-              if user_of_event.facebookid == login_id && !@events.contains?(even)
+              if user_of_event.facebookid == login_id && !@events.include?(even)
                 @events<<even
               end
             end
