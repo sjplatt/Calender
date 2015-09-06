@@ -1,5 +1,110 @@
 
 
+
+<style>
+.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+  font-size: inherit;
+}
+</style>
+
+
+<div id="index-banner" class="parallax-container">
+  <div class="section no-pad-bot">
+    <div class="container">
+      <br><br>
+      <h1 class="header center amber-text text-lighten-1">SoCal</h1>
+      <div class="row center">
+        <h5 class="header col s12 light">The <strong>so</strong>cial <strong>cal</strong>endar that...</h5>
+      </div>
+      <div class="row center">
+        <!--a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Get Started</a-->
+        <div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="true" data-scope="public_profile,email,user_friends" data-onlogin="checkLoginState();"></div>
+      </div>
+      <br><br>
+
+    </div>
+  </div>
+  <div class="parallax"><%= image_tag("banner.jpg") %></div>
+</div>
+
+
+<div class="container">
+  <div class="section">
+
+    <!--   Icon Section   -->
+    <div class="row">
+      <div class="col s12 m4">
+        <div class="icon-block">
+          <h2 class="center light-blue-text"><i class="material-icons">flash_on</i></h2>
+          <h5 class="center">Keep up with what your friends are doing, simply</h5>
+
+          <p class="light">SoCal lets you see what events you have planned and what all your friends are doing in a simple interface.</p>
+        </div>
+      </div>
+
+      <div class="col s12 m4">
+        <div class="icon-block">
+          <h2 class="center light-blue-text"><i class="material-icons">group</i></h2>
+          <h5 class="center">Compartmentalize your schedule</h5>
+
+          <p class="light">Organize your friends into groups and flip through your spheres of influence.</p>
+        </div>
+      </div>
+
+      <div class="col s12 m4">
+        <div class="icon-block">
+          <h2 class="center light-blue-text"><i class="material-icons">settings</i></h2>
+          <h5 class="center">Adjust your calendar accordingly</h5>
+
+          <p class="light">Quickly create new events, see what events you have in common with your friends, and control what they can see based on your relationships.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="page-footer amber">
+  <!--div class="container">
+    <div class="row">
+      <div class="col l6 s12">
+        <h5 class="white-text">Company Bio</h5>
+        <p class="grey-text text-lighten-4"></p>
+
+
+      </div>
+      <div class="col l3 s12">
+        <h5 class="white-text">Settings</h5>
+        <ul>
+          <li><a class="white-text" href="#!">Link 1</a></li>
+          <li><a class="white-text" href="#!">Link 2</a></li>
+          <li><a class="white-text" href="#!">Link 3</a></li>
+          <li><a class="white-text" href="#!">Link 4</a></li>
+        </ul>
+      </div>
+      <div class="col l3 s12">
+        <h5 class="white-text">Connect</h5>
+        <ul>
+          <li><a class="white-text" href="#!">Link 1</a></li>
+          <li><a class="white-text" href="#!">Link 2</a></li>
+          <li><a class="white-text" href="#!">Link 3</a></li>
+          <li><a class="white-text" href="#!">Link 4</a></li>
+        </ul>
+      </div>
+    </div>
+  </div-->
+  <div class="footer-copyright">
+    <div class="container">
+    Made by <a style="text-decoration:underline" class="grey-text text-lighten-2" href="http://github.com/sjplatt">Sam Platt</a> and <a style="text-decoration:underline" class="grey-text text-lighten-2" href="http://github.com/mz496">Matthew Zhu</a>
+    </div>
+  </div>
+</footer>
+
+
+
 <!-- facebook API -->
 
 <div id="fb-root"></div>
@@ -23,12 +128,18 @@
 <!--fb:login-button scope="public_profile,email,user_friends" onlogin="checkLoginState();">
 </fb:login-button-->
 
-<div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true" data-scope="public_profile,email,user_friends" data-onlogin="checkLoginState();"></div>
+
+
 
 <div id="status" style="display:none">
 </div>
 
+
 <script>
+  $(".parallax").parallax();
+  $(".parallax img").css("right","0");
+  $("nav ul").hide();
+
   // This is called with the results from from FB.getLoginStatus().
   function statusChangeCallback(response) {
     console.log('statusChangeCallback');
