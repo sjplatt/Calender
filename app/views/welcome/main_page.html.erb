@@ -327,7 +327,7 @@ $(document).ready(function() {
         .attr("data-location", infoObj.location)
         .attr("data-url", infoObj.url)
         .attr("data-description", infoObj.description)
-        .attr("data-category", infoObj.category)
+        .attr("data-category", infoObj.category.toLowerCase())
         .attr("data-invited", infoObj.invited.toString());
 
         var eventPopupHTML =
