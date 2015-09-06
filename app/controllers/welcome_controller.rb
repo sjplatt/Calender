@@ -73,14 +73,6 @@ class WelcomeController < ApplicationController
       description:description,hostclass:event_category,
       attending: invited.to_s)
 
-    invited.each do |invite|
-      invited_friend = User.find_by(facebookid:invite)
-      if invited_friend
-        #invited_friend.events.add(event)
-        event.users << invited_friend
-      end
-    end
-    #user.events.create(name:name,datetime:startend,website:url,)
     respond_to do |format|
       format.json {render :json => {:event => event}}
     end
@@ -111,6 +103,14 @@ class WelcomeController < ApplicationController
 
       @events = @user.events
 
+      Event.all.each do |event|
+        array_from_string = YAML.load(event.attending)
+        if array_from_string && array_from_string.include?(login_id)
+          if !@events.include?(event)
+            @events<<event
+          end
+        end
+      end
       @friends = []
 
       @user.relationships.each do |relat|
@@ -126,13 +126,14 @@ class WelcomeController < ApplicationController
       @friends = []
 
       @user.relationships.each do |relat|
-        @friends<<User.find_by(id:relat.user_id)
-        if relat.user_id == curuser.id
-          @categories<<relat.type
+        @friends<<User.find_by(facebookid:relat.otherid)
+        if relat.otherid == curuser.facebookid && !@categories.include?(relat.reltype)
+          @categories<<relat.reltype
         end
       end
       events = @user.events
       @events = []
+
       if events
         events.each do |even|
           if @categories.include?(even.hostclass)
@@ -144,6 +145,15 @@ class WelcomeController < ApplicationController
                 @events<<even
               end
             end
+          end
+        end
+      end
+      Event.all.each do |event|
+        array_from_string = YAML.load(event.attending)
+        if array_from_string && array_from_string.include?(login_id) && 
+          array_from_string.include?(view_id)
+          if !@events.include?(event)
+            @events<<event
           end
         end
       end
