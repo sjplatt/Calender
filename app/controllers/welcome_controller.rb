@@ -70,7 +70,8 @@ class WelcomeController < ApplicationController
 
     event = user.events.create(name:title,
       starttime:start,endtime:endtime,location:location,website:url,
-      description:description,hostclass:event_category)
+      description:description,hostclass:event_category,
+      attending: invited.to_s)
 
     invited.each do |invite|
       invited_friend = User.find_by(facebookid:invite)
