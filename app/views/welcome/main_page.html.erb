@@ -38,6 +38,13 @@
   <button id="event-done">DONE</button>
 </div>
 
+<div class="category-tabs">
+  <span class="tab" data-category="all">All</span>
+<% @categories.each do |c| %>
+  <span class="tab" data-category=<%= c %>>Visible to <%= c %></span>
+<% end %>
+</div>
+
 <div id="calendar"></div>
 
 <script>
@@ -133,7 +140,7 @@ $(document).ready(function() {
     });
   });
 
-  var events = [{title:"E1",start:"2015-09-04",end:"2015-09-07"}];
+  var events = [];
 
   $('#calendar').fullCalendar({
   });
@@ -148,23 +155,15 @@ $(document).ready(function() {
     var url = $("#website").val();
     var description = $("#description").val();
 
-    var chosen_category = $('input[name="category"]:checked').parent().text().trim();
-    //console.log(chosen_category);
+    var category = $('input[name="category"]:checked').parent().text().trim();
+    //console.log(category);
 
-    var the_chosen_ones = [];
+    var invited = [];
     $('input[name="invited"]:checked').each(function(index,elem) {
-      the_chosen_ones.push($(elem).attr("data-id"));
+      invited.push($(elem).attr("data-id"));
     });
-    //console.log(the_chosen_ones);
+    //console.log(invited);
 
-    var eventObj = addToCalendar(title,start,end,location,url,description,chosen_category,the_chosen_ones);
-    
-    create_event(eventObj, "<%= @user.facebookid %>");
-  });
-
-
-
-  function addToCalendar(title,start,end,location,url,description,category,invited) {
     var eventObj = {
       title: title, //
       start: start, //
@@ -178,28 +177,43 @@ $(document).ready(function() {
 
     events.push(eventObj);
 
+    //var eventObj = addToCalendar(title,start,end,location,url,description,category,invited);
+
+    //addExtraAttrsTo(title);
+
+    // Readd everything in events to calendar
+    // Once everything is added using fullCal, readd custom attributes
+    
+    // ADD TO DB
+    create_event(eventObj, "<%= @user.facebookid %>");
+  });
+
+
+
+  function readdEvents(events) {
     console.log(events);
-    console.log(eventObj);
     $("#calendar").fullCalendar("removeEvents");
     $("#calendar").fullCalendar("addEventSource",events);
+    console.log("RESETTING");
+  }
 
+  function readdExtraAttrsTo(infoObj) {
     // Add extra attributes onto event's div
     $("span.fc-title").each(function(index,elem) {
       $(elem).parent().parent().removeAttr("href");
 
-      if ($(elem).text() == title) {
+      if ($(elem).text() == infoObj.title) {
+        console.log($(elem).parent());
         $(elem).parent()
-        .attr("data-location", location)
-        .attr("data-url", url)
-        .attr("data-description", description)
-        .attr("data-category", category)
-        .attr("data-invited", invited.toString());
+        //.css("font-size","30px")
+        .attr("data-location", infoObj.location)
+        .attr("data-url", infoObj.url)
+        .attr("data-description", infoObj.description)
+        .attr("data-category", infoObj.category)
+        .attr("data-invited", infoObj.invited.toString());
       }
     });
-
-    return eventObj;
   }
-
   
 
   // POST /ajax/create_event
@@ -213,19 +227,52 @@ $(document).ready(function() {
   }
 
 
-  // Load events from DB
+  // Load everything from DB into events
   <% @events.each do |e| %>
-    addToCalendar(
-      "<%=e.name%>",
-      "<%=e.starttime%>",
-      "<%=e.endtime%>",
-      "<%=e.location%>",
-      "<%=e.website%>",
-      "<%=e.description%>",
-      "<%=e.hostclass%>",
-      <%=e.attending.html_safe%>);
+  events.push({
+    title: "<%=e.name%>",
+    start: "<%=e.starttime%>",
+    end: "<%=e.endtime%>",
+    location: "<%=e.location%>",
+    url: "<%=e.website%>",
+    description: "<%=e.description%>",
+    category: "<%=e.hostclass%>",
+    invited: <%=e.attending.html_safe%>});
   <% end %>
 
+  // Initial adding into calendar using fullCal
+  readdEvents(events);
+  // Initial adding of custom attributes
+  <% @events.each do |e| %>
+    readdExtraAttrsTo({
+    title: "<%=e.name%>",
+    start: "<%=e.starttime%>",
+    end: "<%=e.endtime%>",
+    location: "<%=e.location%>",
+    url: "<%=e.website%>",
+    description: "<%=e.description%>",
+    category: "<%=e.hostclass%>",
+    invited: <%=e.attending.html_safe%>});
+  <% end %>
 
+  // Control tab displays
+  $(".tab").click(function() {
+    var category = $(this).attr("data-category");
+    console.log(category);
+
+    if (category == "all") {
+      $('.fc-event-container').css("visibility","visible");
+    }
+    else {
+      $('.fc-event-container').css("visibility","hidden");
+      $('.fc-content[data-category="' + category + '"]').parent().parent().css("visibility","visible");
+    }
+  });
 });
 </script>
+
+<style>
+.tab {
+  border: 1px solid red;
+}
+</style>
