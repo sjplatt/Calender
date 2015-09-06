@@ -56,14 +56,14 @@ ActiveRecord::Schema.define(version: 20150906043750) do
     t.text     "categories",      limit: 65535
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
-    t.integer  "event_id",        limit: 4
+    t.integer  "events_id",       limit: 4
     t.integer  "relationship_id", limit: 4
     t.text     "gender",          limit: 65535
     t.text     "picture",         limit: 65535
     t.text     "fblink",          limit: 65535
   end
 
-  add_index "users", ["event_id"], name: "index_users_on_event_id", using: :btree
+  add_index "users", ["events_id"], name: "index_users_on_events_id", using: :btree
   add_index "users", ["facebookid"], name: "index_users_on_facebookid", unique: true, length: {"facebookid"=>50}, using: :btree
   add_index "users", ["relationship_id"], name: "index_users_on_relationship_id", using: :btree
 

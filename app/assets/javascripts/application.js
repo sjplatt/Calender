@@ -13,5 +13,6 @@
 //= require jquery
 //= require jquery_ujs
 //= require moment.min
+//= require materialize
 //= require turbolinks
 //= require_tree .

@@ -1,51 +1,72 @@
-<h1>Welcome#main_page</h1>
+<%= render "header" %>
 
-<button id="logout">logout</button>
 
-<!--button id="create">CREATE EVENT</button-->
-<div id="event-creator">
-  Name: <input type="text" id="name"><br>
-  Start date/time e.g. 2015-09-05, or 2015-09-05T12:30:00 <input type="text" id="startdate"><br>
-  End date/time: <input type="text" id="enddate"><br>
-  Location: <input type="text" id="location"><br>
-  Website: <input type="text" id="website"><br>
-  Description: <input type="text" id="description"><br>
-  
-  <div id="category">Category:
-  <form id="category-form">
-  <% @categories.each do |c| %>
-    <label>
-    <input type="radio" name="category" data-category=<%= c %>> <%= c %>
-    </label>
-  <% end %>
-  </form>
+<div class="container">
+<div class="row">
+
+  <div class="col s10">
+    <div class="category-tabs">
+      <span class="tab" data-category="all">All</span>
+    <% @categories.each do |c| %>
+      <span class="tab" data-category=<%= c %>>Visible to <%= c %></span>
+    <% end %>
+    </div>
+
+    <a class="btn-floating btn-large waves-effect waves-light red" href="#event-creator"><i class="material-icons">add</i></a>
+
+    <div id="calendar"></div>
   </div>
 
-  <br>
-  
-  <div id="invited">Invite others:
-  <form id="invite-form">
-  <% @friends.each do |f| %>
-    <label>
-    <input type="checkbox" name="invited" data-id=<%= f.facebookid %>> <%= f.name %>
-    </label>
-  <% end %>
-  </form>
+  <div class="col s2">
+    <div id="sidebar"></div>
+  </div>
+</div>
+</div>
+
+
+
+<div id="event-creator" class="modal modal-fixed-footer">
+  <div class="modal-content">
+    Name: <input type="text" id="name"><br>
+    Start date/time e.g. 2015-09-05, or 2015-09-05T12:30:00 <input type="text" id="startdate"><br>
+    End date/time: <input type="text" id="enddate"><br>
+    Location: <input type="text" id="location"><br>
+    Website: <input type="text" id="website"><br>
+    Description: <input type="text" id="description"><br>
+    
+    <div id="category">Category:
+    <form id="category-form">
+    <% @categories.each do |c| %>
+      <label>
+      <input type="radio" name="category" data-category=<%= c %>> <%= c %>
+      </label>
+    <% end %>
+    </form>
+    </div>
+
+    <br>
+    
+    <div id="invited">Invite others:
+    <form id="invite-form">
+    <% @friends.each do |f| %>
+      <label>
+      <input type="checkbox" name="invited" data-id=<%= f.facebookid %>> <%= f.name %>
+      </label>
+    <% end %>
+    </form>
+    </div>
+
+    <br>
   </div>
 
-  <br>
-
-  <button id="event-done">DONE</button>
+  <div class="modal-footer">
+    <a href="#!" id="event-done" class="modal-action modal-close waves-effect waves-green btn-flat">Done</a>
+  </div>
 </div>
 
-<div class="category-tabs">
-  <span class="tab" data-category="all">All</span>
-<% @categories.each do |c| %>
-  <span class="tab" data-category=<%= c %>>Visible to <%= c %></span>
-<% end %>
-</div>
 
-<div id="calendar"></div>
+
+
 
 <script>
 
@@ -194,6 +215,16 @@ $(document).ready(function() {
 
 
 
+  function getNames(ids_arr) {
+    $.ajax("/ajax/get_names",
+      {ids:ids_arr},
+      function(response) {
+
+      });
+  }
+
+
+
   function readdEvents(events) {
     console.log(events);
     $("#calendar").fullCalendar("removeEvents");
@@ -203,20 +234,23 @@ $(document).ready(function() {
   function readdExtraAttrsTo(infoObj) {
     // Add extra attributes onto event's div
     $("span.fc-title").each(function(index,elem) {
-      $(elem).parent().parent().removeAttr("href");
 
       if ($(elem).text() == infoObj.title) {
-        console.log($(elem).parent());
+        $(elem).parent().parent()
+        .attr("href", "#event-" + infoObj.title.replace(/W/,"-")).
+        addClass("modal-trigger");
+
         $(elem).parent()
         .attr("data-location", infoObj.location)
         .attr("data-url", infoObj.url)
         .attr("data-description", infoObj.description)
         .attr("data-category", infoObj.category)
         .attr("data-invited", infoObj.invited.toString());
-        $(elem).css("position","relative");
-        $(elem).parent().tooltipster({
-          content: $(
-          '<span class="tooltip-heading">' + infoObj.title + '</span>\
+
+        var eventPopupHTML =
+          '<div id="event-' + infoObj.title.replace(/\W/,"-") + '" class="modal modal-fixed-footer">\
+          <div class="modal-content">\
+          <span class="tooltip-heading">' + infoObj.title + '</span>\
           <span class="tooltip-text">' + infoObj.start + ' to ' + infoObj.end + '</span><br>\
           <span class="tooltip-heading">Location:</span>\
           <span class="tooltip-text">' + infoObj.location + '</span><br>\
@@ -224,10 +258,18 @@ $(document).ready(function() {
           <span class="tooltip-heading">Description:</span>\
           <span class="tooltip-text">' + infoObj.description.substring(0,50) + "..." + '</span>\
           <span class="tooltip-heading">Category:</span>\
-          <span class="tooltip-text">' + infoObj.hostclass + '<span>\
+          <span class="tooltip-text">' + infoObj.category + '<span>\
           <span class="tooltip-heading">Invited:</span>\
-          <span class="tooltip-text">???</span>')
-        })
+          <span class="tooltip-text invited-names"></span>\
+          </div>\
+          <div class="modal-footer">\
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Done</a>\
+          </div>\
+          </div>';
+
+
+
+        $("body").append(eventPopupHTML);
       }
     })
   }
@@ -278,13 +320,19 @@ $(document).ready(function() {
     console.log(category);
 
     if (category == "all") {
-      $('.fc-event-container').css("visibility","visible");
+      $('.fc-event-container').css("opacity","1");
     }
     else {
-      $('.fc-event-container').css("visibility","hidden");
-      $('.fc-content[data-category="' + category + '"]').parent().parent().css("visibility","visible");
+      $('.fc-event-container').css("opacity","0.5");
+      $('.fc-content[data-category="' + category + '"]').parent().parent().css("opacity","1");
     }
   });
+
+
+
+
+
+  $('.modal-trigger').leanModal();
 });
 </script>
 
