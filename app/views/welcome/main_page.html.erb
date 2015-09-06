@@ -141,6 +141,13 @@ $(document).ready(function() {
   $("#calendar").fullCalendar("addEventSource",events);
 
   $("#event-done").click(function() {
+    var title = $("#name").val();
+    var start = $("#startdate").val();
+    var end = $("#enddate").val();
+    var location = $("#location").val();
+    var url = $("#website").val();
+    var description = $("#description").val();
+
     var chosen_category = $('input[name="category"]:checked').parent().text().trim();
     //console.log(chosen_category);
 
@@ -151,12 +158,12 @@ $(document).ready(function() {
     //console.log(the_chosen_ones);
 
     var eventObj = {
-      title: $("#name").val(),
-      start: $("#startdate").val(),
-      end: $("#enddate").val(),
-      location: $("#location").val(),
-      url: $("#website").val(),
-      description: $("#description").val(),
+      title: title, //
+      start: start, //
+      end: end, //
+      location: location,
+      url: url, 
+      description: description,
       category: chosen_category,
       invited: the_chosen_ones
     };
@@ -167,6 +174,20 @@ $(document).ready(function() {
     console.log(eventObj);
     $("#calendar").fullCalendar("removeEvents");
     $("#calendar").fullCalendar("addEventSource",events);
+
+    // Add extra attributes onto event's div
+    $("span.fc-title").each(function(index,elem) {
+      $(elem).parent().parent().removeAttr("href");
+
+      if ($(elem).text() == title) {
+        $(elem).parent()
+        .attr("data-location", location)
+        .attr("data-url", url)
+        .attr("data-description", description)
+        .attr("data-category", chosen_category)
+        .attr("data-invited", the_chosen_ones.toString());
+      }
+    });
     
     create_event(eventObj, "<%= @user.facebookid %>");
   });
