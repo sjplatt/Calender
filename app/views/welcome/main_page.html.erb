@@ -1,26 +1,65 @@
 <%= render "header" %>
 
 
+<style>
+
+.tab {
+  cursor: pointer;
+}
+.tab-display {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.button-container {
+  text-align: center;
+}
+
+</style>
+
+
+
+
+
+
 <div class="container">
+
+<div class="row tab-display">
+
+  <div class="col s9">
+    <ul class="tabs">
+      <li class="tab" data-category="all"><a class="active">All</a></li>
+    <% @categories.each do |c| %>
+      <li class="tab" data-category=<%= c %>><a><%= c %></a></li>
+    <% end %>
+    </ul>
+  </div>
+
+  <div class="col s3 button-container">
+    <a class="btn-floating btn-large waves-effect waves-light red modal-trigger" href="#event-creator"><i class="material-icons">add</i></a>
+  </div>
+
+</div>
+
 <div class="row">
 
-  <div class="col s10">
-    <div class="category-tabs">
-      <span class="tab" data-category="all">All</span>
-    <% @categories.each do |c| %>
-      <span class="tab" data-category=<%= c %>>Visible to <%= c %></span>
-    <% end %>
+  <div class="col s9">
+    <div class="card">
+    <div class="card-content" id="calendar"></div>
     </div>
-
-    <a class="btn-floating btn-large waves-effect waves-light red" href="#event-creator"><i class="material-icons">add</i></a>
-
-    <div id="calendar"></div>
   </div>
 
-  <div class="col s2">
-    <div id="sidebar"></div>
+  <div class="col s3">
+    <div class="card">
+    <div class="card-content" id="friends">
+      <span class="card-title grey-text text-darken-4">Friends</span>
+      <i class="material-icons right">more_vert</i>
+      <ul class="collection">
+      </ul>
+    </div>
   </div>
+
 </div>
+
 </div>
 
 
@@ -144,10 +183,19 @@ $(document).ready(function() {
   function testAPI() {
     console.log('Welcome!');
 
-    /*FB.api('/me?fields=id,name', function(self_response) {
-      console.log('Successful login for: ' + self_response.name);
-      login_id = self_response.id;
-    });*/
+    FB.api('/me/friends?fields=id,name,picture', function(friends_response) {
+      console.log(friends_response);
+      var friends = friends_response.data;
+      var friends_list = $("#friends .collection");
+
+      for (var i = 0; i < Math.min(4,friends.length); i++) {
+        friends_list.append(
+          '<li class="collection-item avatar">\
+          <img src="' + friends[i].picture.data.url + '" class="circle"/>\
+          <a href="' + window.location.href.replace(/view_id=.*/, "view_id="+friends[i].id) + '">' + friends[i].name + '</a>\
+          </li>');
+      }
+    });
   }
 
 
@@ -335,12 +383,3 @@ $(document).ready(function() {
   $('.modal-trigger').leanModal();
 });
 </script>
-
-<style>
-.tab {
-  border: 1px solid red;
-}
-.tooltipster-base {
-  z-index: 1009380;
-}
-</style>
