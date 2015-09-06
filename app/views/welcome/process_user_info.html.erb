@@ -56,6 +56,11 @@
 
 
 <script>
+  $("#logout").click(function() {
+      FB.logout(function(response) {
+      });
+    });
+
   function p(str) {console.log(str);}
 
   function update_category_count(cat) {
@@ -66,16 +71,18 @@
 
   function add_category(category_name) {
     // Add to cateogry display
-    $(".categories-display .collection").append('<li class="collection-item" data-category=' + category_name.replace(/\W/g,"-") + '><span class="name">' + category_name + '</span>: <span class="count">0</span> members</div>');
+    $(".categories-display .collection").append('<li class="category collection-item" data-category=' + category_name.replace(/\W/g,"-") + '><span class="name">' + category_name + '</span>: <span class="count">0</span> members</div>');
 
     $("#category-name").val("");
 
     // Add to hover popups
     $(".hover-popup").each(function(index,elem) {
-      var newcategoryHTML = '<div class="popup-category"><label>' + category_name +
-        '<input type="checkbox" data-category="' + 
-        category_name.replace(/\W/g, "-") + '" data-id="' +
-        $(elem).parent().attr("data-id") + '"></label></div>';
+      var newcategoryHTML =
+      '<div class="popup-category"><p>\
+        <input type="checkbox" data-category="' + 
+        category_name.replace(/\W/g, "-") + '" id="cb-' +
+        $(elem).parent().attr("data-id") + '">\
+        <label for="cb-' + $(elem).parent().attr("data-id") + '">' + category_name + '</label></p></div>';
 
       $(elem).append(newcategoryHTML);
     });
@@ -269,6 +276,7 @@
       $(".friends-display .collection").append(
           '<li class="collection-item avatar">\
           <img src="' + friends[key].picture.data.url + '" class="circle"/>' + friends[key].name + '</a>\
+          <div class="hover-popup"></div>\
           </li>');
 
 
