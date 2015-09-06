@@ -157,6 +157,14 @@ $(document).ready(function() {
     });
     //console.log(the_chosen_ones);
 
+    var eventObj = addToCalendar(title,start,end,location,url,description,chosen_category,the_chosen_ones);
+    
+    create_event(eventObj, "<%= @user.facebookid %>");
+  });
+
+
+
+  function addToCalendar(title,start,end,location,url,description,category,invited) {
     var eventObj = {
       title: title, //
       start: start, //
@@ -164,8 +172,8 @@ $(document).ready(function() {
       location: location,
       url: url, 
       description: description,
-      category: chosen_category,
-      invited: the_chosen_ones
+      category: category,
+      invited: invited
     };
 
     events.push(eventObj);
@@ -184,13 +192,15 @@ $(document).ready(function() {
         .attr("data-location", location)
         .attr("data-url", url)
         .attr("data-description", description)
-        .attr("data-category", chosen_category)
-        .attr("data-invited", the_chosen_ones.toString());
+        .attr("data-category", category)
+        .attr("data-invited", invited.toString());
       }
     });
-    
-    create_event(eventObj, "<%= @user.facebookid %>");
-  });
+
+    return eventObj;
+  }
+
+  
 
   // POST /ajax/create_event
   function create_event(eventObj, login_id) {
@@ -201,6 +211,20 @@ $(document).ready(function() {
         //console.log(data);
       });
   }
+
+
+  // Load events from DB
+  <% @events.each do |e| %>
+    addToCalendar(
+      "<%=e.name%>",
+      "<%=e.starttime%>",
+      "<%=e.endtime%>",
+      "<%=e.location%>",
+      "<%=e.website%>",
+      "<%=e.description%>",
+      "<%=e.hostclass%>",
+      <%=e.attending.html_safe%>);
+  <% end %>
 
 
 });

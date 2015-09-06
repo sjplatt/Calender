@@ -76,7 +76,8 @@ class WelcomeController < ApplicationController
     invited.each do |invite|
       invited_friend = User.find_by(facebookid:invite)
       if invited_friend
-        invited_friend.events << event
+        #invited_friend.events.add(event)
+        event.users.add(invited_friend)
       end
     end
     #user.events.create(name:name,datetime:startend,website:url,)
