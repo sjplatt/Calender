@@ -320,7 +320,7 @@ $(document).ready(function() {
 
       if ($(elem).text() == infoObj.title) {
         $(elem).parent().parent()
-        .attr("href", "#event-" + infoObj.title.replace(/W/,"-")).
+        .attr("href", "#event-" + infoObj.title.replace(/\W/,"-")).
         addClass("modal-trigger");
 
         $(elem).parent()
